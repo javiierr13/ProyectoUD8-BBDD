@@ -37,7 +37,7 @@ create table empresa (
 
 create table sede (
     id_sede int primary key auto_increment,
-    localizacion varchar(255),
+    localizacion varchar(150),
     empresa int not null,
     constraint fk_sede_empresa foreign key (empresa) references empresa(id_empresa)
 );
@@ -103,9 +103,9 @@ create table concreciones (
 create table evaluacion (
     id_evaluacion int primary key auto_increment,
     observaciones_tutor_laboral text,
-    nota float,
-    firma_tutor varchar(255),
-    firma_alumno varchar(255),
+    nota double,
+    firma_tutor boolean,
+    firma_alumno boolean,
     actividad int not null,
     alumno int not null,
     tutor_laboral int not null,
@@ -116,7 +116,7 @@ create table evaluacion (
 
 create table convenio (
     id_convenio int primary key auto_increment,
-    firma text,
+    firma boolean,
     tutor_laboral int not null,
     tutor_docente int not null,
     proyecto int not null,
