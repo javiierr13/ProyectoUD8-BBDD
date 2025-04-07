@@ -14,7 +14,7 @@ create table tutor_docente (
     id_docente int primary key auto_increment,
     nombre varchar(100),
     apellidos varchar(100),
-    dni varchar(20),
+    dni char(9),
     correo_electronico varchar(100)
 );
 
@@ -30,7 +30,7 @@ create table seguimiento (
 
 create table empresa (
     id_empresa int primary key auto_increment,
-    nif varchar(20),
+    nif char(9),
     nombre varchar(100),
     ocupacion varchar(100)
 );
