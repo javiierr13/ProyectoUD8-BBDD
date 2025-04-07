@@ -1,4 +1,22 @@
 use atica;
+set foreign_key_checks = 0;
+
+delete from practicas;
+delete from convenio;
+delete from evaluacion;
+delete from concreciones;
+delete from actividades_formativas;
+delete from proyecto;
+delete from tutor_laboral;
+delete from diario_alumno;
+delete from jornada;
+delete from calendario;
+delete from sede;
+delete from empresa;
+delete from seguimiento;
+delete from tutor_docente;
+delete from alumno;
+
 -- Meter alumnos, tutores_docentes y seguimientos
 delimiter $$
 drop procedure if exists rellenar$$
@@ -165,4 +183,68 @@ end$$
 delimiter ;
 call rellenar_calendario;
 select * from calendario;
+
+-- Meter jornada 
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS rellenar_jornada$$
+CREATE PROCEDURE rellenar_jornada()
+BEGIN 
+
+	-- Declaramos el cursor para recorrer tabla calendarios
+	declare c_fecha_inicio date;
+    declare c_fecha_fin date;
+    declare c_id int;
+    declare fin int default 0;
+    declare calendarios cursor for select fecha_inicio, fecha_fin, id_calendario from calendario;
+    declare continue handler for not found set fin = 1;
+    
+    open calendarios;
+    
+    bucle_cal: LOOP
+    
+		fetch calendarios into c_fecha_inicio, c_fecha_fin, c_id;
+        
+        while c_fecha_inicio <= c_fecha_fin DO
+			if dayofweek(c_fecha_inicio) IN (2,3,4,5,6) then
+				insert into jornada 
+					(dia_semana, fecha, hora_inicio, hora_fin,es_festivo, calendario)
+				values ( dia_semana(dayofweek(c_fecha_inicio)), c_fecha_inicio, '08:00', '22:00',false, c_id);
+			end if;
+            SET c_fecha_inicio = DATE_ADD(c_fecha_inicio, INTERVAL 1 DAY);
+		end while;
+    
+		if fin = 1 then
+			leave bucle_cal;
+		end if;
+    END LOOP;
+	
+    close calendarios;
+    
+END$$
+
+drop function if exists dia_semana$$
+create function dia_semana(num_dia int) returns varchar(25) deterministic
+begin
+	
+    declare result varchar(25);
+	set result = case(num_dia)
+		when 1 then 'Domingo'
+        when 2 then 'Lunes'
+        when 3 then 'Martes'
+        when 4 then 'Miercoles'
+        when 5 then 'Jueves'
+        when 6 then 'Viernes'
+        when 7 then 'Sabado'
+	end;
+    
+    return result;
+end$$
+
+delimiter ;
+call rellenar_jornada;
+select * from jornada;
+-- Meter diario alumno 
+ 
+set foreign_key_checks = 1;
 
