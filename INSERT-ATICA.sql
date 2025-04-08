@@ -1,21 +1,4 @@
 use atica;
-set foreign_key_checks = 0;
-
-delete from practicas;
-delete from convenio;
-delete from evaluacion;
-delete from concreciones;
-delete from actividades_formativas;
-delete from proyecto;
-delete from tutor_laboral;
-delete from diario_alumno;
-delete from jornada;
-delete from calendario;
-delete from sede;
-delete from empresa;
-delete from seguimiento;
-delete from tutor_docente;
-delete from alumno;
 
 -- Meter alumnos, tutores_docentes y seguimientos
 delimiter $$
@@ -26,7 +9,8 @@ begin
 declare inicio int default 0;
 declare fecha_nacimiento date default '2000-01-01';
 declare fecha_seguimiento date default '2025-01-01';
-while inicio < 100 do
+while inicio < 30 do
+    set inicio = inicio +1;
 	set fecha_nacimiento = date_add(fecha_nacimiento, interval 1 day);
 	set fecha_seguimiento = date_add(fecha_seguimiento, interval 1 month);
 
@@ -36,7 +20,6 @@ while inicio < 100 do
     concat('apellido',inicio),
     fecha_nacimiento
     );
-    set inicio = inicio +1;
     
     insert into tutor_docente(nombre,apellidos,dni,correo_electronico) values(
     concat('tutor_docente',inicio),
@@ -244,7 +227,60 @@ end$$
 delimiter ;
 call rellenar_jornada;
 select * from jornada;
--- Meter diario alumno 
- 
-set foreign_key_checks = 1;
 
+-- Meter diario alumno 
+delimiter $$
+ drop procedure if exists diario_alumno$$
+ create procedure diario_alumno()
+ begin
+	declare inicio int default 0;
+    while inicio <50 do 
+    set inicio = inicio +1;
+    insert into diario_alumno(descripcion, alumno, jornada) values(
+		concat('descripcion',inicio),
+        inicio,
+        inicio
+    );
+    
+    end while;
+ end$$
+delimiter ;
+call diario_alumno;
+select * from diario_alumno;
+
+-- Meter tutor laboral
+delimiter $$
+drop procedure if exists tutor_laboral$$
+create procedure tutor_laboral()
+ begin
+ declare inicio int default 0;
+    while inicio <25 do
+		set inicio = inicio +1;
+		insert into tutor_laboral(nombre, apellidos, empresa) values(
+        concat('tutor_laboral',inicio),
+        concat('apellido',inicio),
+        inicio
+        );
+    end while;
+ end$$
+delimiter ;
+call tutor_laboral;
+select * from tutor_laboral;
+
+-- Meter proyecto
+delimiter $$
+drop procedure if exists proyectos$$
+create procedure proyectos()
+ begin
+ declare inicio int default 0;
+    while inicio <25 do
+		set inicio = inicio +1;
+        insert into proyecto(cod, nombre) values (
+        	concat(lpad(inicio,6,'0'),'P'),
+            concat('proyecto',inicio)
+        );
+	end while;
+end$$
+delimiter ;
+call proyectos;
+select * from proyectos;
