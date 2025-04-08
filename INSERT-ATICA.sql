@@ -234,12 +234,12 @@ delimiter $$
  create procedure diario_alumno()
  begin
 	declare inicio int default 0;
-    while inicio <50 do 
+    while inicio <25 do 
     set inicio = inicio +1;
     insert into diario_alumno(descripcion, alumno, jornada) values(
 		concat('descripcion',inicio),
         inicio,
-        inicio
+        400
     );
     
     end while;
@@ -283,4 +283,47 @@ create procedure proyectos()
 end$$
 delimiter ;
 call proyectos;
-select * from proyectos;
+select * from proyecto;
+
+-- Meter actividades formativas
+delimiter $$
+drop procedure if exists rellenar_actividades$$
+create procedure rellenar_actividades()
+begin
+    declare c_id int;
+    declare fin int default 0;
+    declare i int;
+    
+    declare cur_proyectos cursor for select id_proyecto from proyecto;
+    declare continue handler for not found set fin = 1;
+
+    open cur_proyectos;
+
+    bucle_proyectos: loop
+        fetch cur_proyectos into c_id;
+
+        if fin = 1 then 
+            leave bucle_proyectos;
+        end if;
+        
+        set i = 1;
+        while i <= 10 do
+        
+            insert into actividades_formativas (nombre, obligatoriedad, proyecto)
+            values (
+                concat('actividad ', i, ' del proyecto ', c_id),
+                true,
+                c_id
+            );
+            set i = i + 1;
+        end while;
+    end loop;
+    close cur_proyectos;
+
+end$$
+delimiter ;
+call rellenar_actividades;
+select * from actividades_formativas;
+
+-- 
+

@@ -64,7 +64,7 @@ create table jornada (
 create table diario_alumno (
     id_diario int primary key auto_increment,
     descripcion text,
-    alumno int not null unique,
+    alumno int not null,
     jornada int,
     constraint fk_diario_alumno foreign key (alumno) references alumno(id_alumno),
     constraint fk_diario_jornada foreign key (jornada) references jornada(id_jornada)
