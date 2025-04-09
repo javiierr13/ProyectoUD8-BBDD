@@ -325,5 +325,22 @@ delimiter ;
 call rellenar_actividades;
 select * from actividades_formativas;
 
--- 
+-- Concreciones
 
+delimiter $$
+drop procedure if exists concreciones$$
+create procedure concreciones()
+begin
+declare inicio int default 0;
+while inicio<50 do 
+set inicio = inicio +1;
+insert into concreciones(descripcion_actividad,dificultad,actividad) values(
+	concat('desscripcion',inicio),
+    'media',
+    inicio
+    );
+end while;
+end$$
+delimiter ;
+call concreciones;
+select * from concreciones;

@@ -95,7 +95,7 @@ create table actividades_formativas (
 create table concreciones (
     id_concreciones int primary key auto_increment,
     descripcion_actividad text,
-    dificultad int,
+    dificultad varchar(100),
     actividad int not null unique,
     constraint fk_concrecion_actividad foreign key (actividad) references actividades_formativas(id_actividades)
 );
