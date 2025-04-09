@@ -9,7 +9,7 @@ begin
   declare fecha_nacimiento date default '2000-01-01';
   declare fecha_seguimiento date default '2025-01-01';
 
-  while inicio < 30 do
+  while inicio < 20 do
     set inicio = inicio +1;
     set fecha_nacimiento = date_add(fecha_nacimiento, interval 1 day);
     set fecha_seguimiento = date_add(fecha_seguimiento, interval 1 month);
@@ -58,33 +58,26 @@ insert into empresa(nif, nombre, ocupacion) values
 ('l23456111', 'industrias manzano', 'industria'),
 ('m34567222', 'moda urbana', 'moda'),
 ('n45678333', 'viajes horizonte', 'turismo'),
-('o56789444', 'minas del sur', 'mineria'),
-('p67890555', 'quimicos rivadavia', 'quimica'),
-('q78901666', 'energia solar iberica', 'energia'),
-('r89012777', 'motor iberia', 'automocion'),
-('s90123888', 'servilim limpieza', 'limpieza'),
-('t01234999', 'transporte rápido s.l.', 'transporte'),
-('u12345111', 'telecomunicaciones nova', 'comunicaciones'),
-('v23456222', 'asesores del sur', 'asesoria'),
-('w34567333', 'consultores globales', 'consultoria'),
-('x45678444', 'estudio creativo luna', 'diseño'),
-('y56789555', 'marketing digital plus', 'marketing');
-select * from empresa;
+('o56789444', 'minas del sur', 'mineria');
+select count(*) from empresa;
 
 insert into sede(localizacion, empresa) values 
-('madrid', 1), ('barcelona', 1), ('sevilla', 2), ('valencia', 2), ('zaragoza', 3),
-('murcia', 3), ('malaga', 4), ('alicante', 4), ('vigo', 5), ('oviedo', 5),
-('bilbao', 6), ('santander', 6), ('valladolid', 7), ('leon', 7), ('granada', 8),
-('jaen', 8), ('albacete', 9), ('cuenca', 9), ('logroño', 10), ('pamplona', 10),
-('guadalajara', 11), ('toledo', 11), ('huelva', 12), ('cadiz', 12),
-('ciudad real', 13), ('teruel', 13), ('burgos', 14), ('soria', 14),
-('ceuta', 15), ('melilla', 15), ('gijon', 16), ('aviles', 16),
-('san sebastian', 17), ('vitoria', 17), ('lleida', 18), ('tarragona', 18),
-('palma', 19), ('ibiza', 19), ('reus', 20), ('sabadell', 20),
-('elche', 21), ('castellon', 21), ('ourense', 22), ('lugo', 22),
-('caceres', 23), ('badajoz', 23), ('arrecife', 24), ('santa cruz de tenerife', 24),
-('cordoba', 25), ('almeria', 25);
-select * from sede;
+('madrid', 1), 
+('sevilla', 2),
+('murcia', 3), 
+('malaga', 4), 
+('vigo', 5),
+('bilbao', 6), 
+('valladolid', 7),
+('jaen', 8), 
+('cuenca', 9),
+('logroño', 10), 
+('guadalajara', 11), 
+('huelva', 12),
+('ciudad real', 13), 
+('burgos', 14),
+('ceuta', 15);
+select count(*) from sede;
 
 -- calendario y jornadas
 delimiter $$
@@ -92,7 +85,7 @@ drop procedure if exists rellenar_calendario$$
 create procedure rellenar_calendario()
 begin
   declare inicio int default 0;
-  while inicio<50 do 
+  while inicio<15 do 
     set inicio = inicio +1;
     insert into calendario(fecha_inicio,fecha_fin,sede) values(
       '2025-04-21','2025-05-30',inicio
@@ -156,7 +149,7 @@ drop procedure if exists diario_alumno$$
 create procedure diario_alumno()
 begin
   declare inicio int default 0;
-  while inicio <25 do 
+  while inicio <20 do 
     set inicio = inicio +1;
     insert into diario_alumno(descripcion, alumno, jornada) values(
       concat('descripcion',inicio),
@@ -175,7 +168,7 @@ drop procedure if exists tutor_laboral$$
 create procedure tutor_laboral()
 begin
   declare inicio int default 0;
-  while inicio <25 do
+  while inicio <15 do
     set inicio = inicio +1;
     insert into tutor_laboral(nombre, apellidos, empresa) values(
       concat('tutor_laboral',inicio),
@@ -257,87 +250,138 @@ call concreciones;
 select * from concreciones;
 
 -- Convenio
+insert into convenio (firma, tutor_laboral, tutor_docente, proyecto) values
+(true, 1, 1, 1),
+(true, 2, 2, 2),
+(true, 3, 3, 3),
+(true, 4, 4, 4),
+(true, 5, 5, 5),
+(true, 6, 6, 1),
+(true, 7, 7, 2),
+(true, 8, 8, 3),
+(true, 9, 9, 4),
+(true, 10, 10, 5),
+(true, 11, 11, 1),
+(true, 12, 12, 2),
+(true, 13, 13, 3),
+(true, 14, 14, 4),
+(true, 15, 15, 5),
+(true, 1, 16, 1),
+(true, 2, 17, 2),
+(true, 3, 18, 3),
+(true, 4, 19, 4),
+(true, 5, 20, 5);
 
+select * from convenio;
 
-
-
-
-
-
-
-
--- Evaluacion 
+-- Practicas 
 delimiter $$
-
-drop procedure if exists rellenar_evaluaciones$$
-create procedure rellenar_evaluaciones()
-begin
-  declare fin_alumnos int default 0;
-  declare a_id int;
-
-  declare cur_alumnos cursor for select id_alumno from alumno;
-  declare continue handler for not found set fin_alumnos = 1;
-
-  open cur_alumnos;
-  bucle_alumnos: loop
-    fetch cur_alumnos into a_id;
-    if fin_alumnos = 1 then leave bucle_alumnos; end if;
-
-    -- Bloque independiente para actividades
-    begin
-      declare fin_actividades int default 0;
-      declare act_id int;
-      declare tut_id int;
-
-      declare cur_actividades cursor for select id_actividades from actividades_formativas;
-      declare continue handler for not found set fin_actividades = 1;
-
-      open cur_actividades;
-      bucle_actividades: loop
-        fetch cur_actividades into act_id;
-        if fin_actividades = 1 then leave bucle_actividades; end if;
-
-        -- Elegir tutor laboral aleatorio
-        select id_laboral
-        into tut_id
-        from tutor_laboral
-        order by rand()
-        limit 1;
-
-        -- Insertar evaluación
-        insert into evaluacion (
-          observaciones_tutor_laboral,
-          nota,
-          firma_tutor,
-          firma_alumno,
-          actividad,
-          alumno,
-          tutor_laboral
-        ) values (
-          concat('Observaciones para alumno ', a_id, ' en actividad ', act_id),
-          round(rand() * 10, 2),
-          true,
-          true,
-          act_id,
-          a_id,
-          tut_id
-        );
-
-      end loop bucle_actividades;
-      close cur_actividades;
-    end;
-
-  end loop bucle_alumnos;
-  close cur_alumnos;
+drop procedure if exists practicas$$
+create procedure practicas()
+begin 
+declare inicio int default 0;
+  while inicio<20 do 
+    set inicio = inicio +1;
+    insert into practicas (anio_curso,convenio,alumno,calendario) values(
+	'2025',
+    inicio,
+    inicio,
+    floor(RAND() * 15) + 1
+    );
+    end while;
 end$$
-
 delimiter ;
+call practicas;
+select * from practicas;
 
--- Ejecutar
-call rellenar_evaluaciones;
 
--- Ver resultado
-select * from evaluacion;
+-- Evaluacion  
+-- Evaluaciones de los 20 alumnos en las 4 actividades
+-- Alumno 1
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Buen desarrollo de interfaces', 8.5, TRUE, TRUE, 1, 1, 1),  -- Juan Pérez en Desarrollo Frontend
+('Excelente API RESTful', 9.0, TRUE, TRUE, 2, 1, 1),         -- Juan Pérez en Desarrollo Backend
+('Buena operación de la máquina', 7.5, TRUE, TRUE, 3, 1, 1),  -- Juan Pérez en Mantenimiento de Máquinas
+('Buena operación de la máquina', 7.5, TRUE, TRUE, 4, 1, 1),  -- Juan Pérez en Mantenimiento de Máquinas
+('Correcta programación del robot', 8.0, TRUE, TRUE, 5, 1, 1); -- Juan Pérez en Programación de Robots
+
+-- Alumno 2
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Buen desarrollo de interfaces', 7.8, TRUE, TRUE, 1, 2, 1),  -- Ana García en Desarrollo Frontend
+('Buena API RESTful', 8.0, TRUE, TRUE, 2, 2, 1),             -- Ana García en Desarrollo Backend
+('Buena operación de la máquina', 7.0, TRUE, TRUE, 3, 2, 1),  -- Ana García en Mantenimiento de Máquinas
+('Programación eficiente del robot', 8.3, TRUE, TRUE, 4, 2, 1); -- Ana García en Programación de Robots
+
+-- Alumno 3
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz simple pero funcional', 7.0, TRUE, TRUE, 1, 3, 1),  -- Mario Ruiz en Desarrollo Frontend
+('Buena API RESTful', 8.0, TRUE, TRUE, 2, 3, 1),             -- Mario Ruiz en Desarrollo Backend
+('Problemas con la máquina', 6.0, TRUE, TRUE, 3, 3, 1),       -- Mario Ruiz en Mantenimiento de Máquinas
+('Correcta programación del robot', 7.5, TRUE, TRUE, 4, 3, 1); -- Mario Ruiz en Programación de Robots
+
+-- Alumno 4
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Excelente interfaz de usuario', 9.0, TRUE, TRUE, 1, 4, 1),  -- Laura Gómez en Desarrollo Frontend
+('Buen manejo de API RESTful', 8.5, TRUE, TRUE, 2, 4, 1),     -- Laura Gómez en Desarrollo Backend
+('Mantenimiento adecuado de la máquina', 7.8, TRUE, TRUE, 3, 4, 1), -- Laura Gómez en Mantenimiento de Máquinas
+('Excelente programación de robots', 9.5, TRUE, TRUE, 4, 4, 1); -- Laura Gómez en Programación de Robots
+
+-- Alumno 5
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz muy atractiva', 8.3, TRUE, TRUE, 1, 5, 1),  -- Sergio Pérez en Desarrollo Frontend
+('API RESTful bien diseñada', 8.8, TRUE, TRUE, 2, 5, 1), -- Sergio Pérez en Desarrollo Backend
+('Mantenimiento de la máquina sin problemas', 7.0, TRUE, TRUE, 3, 5, 1), -- Sergio Pérez en Mantenimiento de Máquinas
+('Programación del robot eficiente', 8.2, TRUE, TRUE, 4, 5, 1); -- Sergio Pérez en Programación de Robots
+
+-- Alumno 6
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz funcional pero simple', 7.5, TRUE, TRUE, 1, 6, 1),  -- Marta López en Desarrollo Frontend
+('API RESTful funcional', 7.9, TRUE, TRUE, 2, 6, 1),           -- Marta López en Desarrollo Backend
+('Buen mantenimiento de la máquina', 8.0, TRUE, TRUE, 3, 6, 1),  -- Marta López en Mantenimiento de Máquinas
+('Buen manejo en programación de robots', 8.3, TRUE, TRUE, 4, 6, 1); -- Marta López en Programación de Robots
+
+-- Alumno 7
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz básica pero útil', 6.8, TRUE, TRUE, 1, 7, 1),  -- Javier Martínez en Desarrollo Frontend
+('API RESTful buena pero mejorable', 7.5, TRUE, TRUE, 2, 7, 1), -- Javier Martínez en Desarrollo Backend
+('Mantenimiento de la máquina adecuado', 7.2, TRUE, TRUE, 3, 7, 1), -- Javier Martínez en Mantenimiento de Máquinas
+('Programación del robot correcta', 7.5, TRUE, TRUE, 4, 7, 1); -- Javier Martínez en Programación de Robots
+
+-- Alumno 8
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Buen diseño de la interfaz', 8.1, TRUE, TRUE, 1, 8, 1),  -- Claudia Rodríguez en Desarrollo Frontend
+('API RESTful eficiente', 8.4, TRUE, TRUE, 2, 8, 1),      -- Claudia Rodríguez en Desarrollo Backend
+('Mantenimiento de la máquina sin inconvenientes', 7.5, TRUE, TRUE, 3, 8, 1), -- Claudia Rodríguez en Mantenimiento de Máquinas
+('Robots programados correctamente', 8.0, TRUE, TRUE, 4, 8, 1); -- Claudia Rodríguez en Programación de Robots
+
+-- Alumno 9
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz de usuario funcional', 7.5, TRUE, TRUE, 1, 9, 1),  -- Luis Torres en Desarrollo Frontend
+('API RESTful bien implementada', 8.3, TRUE, TRUE, 2, 9, 1),  -- Luis Torres en Desarrollo Backend
+('Mantenimiento de la máquina bien ejecutado', 7.2, TRUE, TRUE, 3, 9, 1), -- Luis Torres en Mantenimiento de Máquinas
+('Excelente programación de robots', 8.7, TRUE, TRUE, 4, 9, 1); -- Luis Torres en Programación de Robots
+
+-- Alumno 10
+INSERT INTO evaluacion (observaciones_tutor_laboral, nota, firma_tutor, firma_alumno, actividad, alumno, tutor_laboral) 
+VALUES 
+('Interfaz atractiva pero mejorable', 7.9, TRUE, TRUE, 1, 10, 1), -- Pedro Ruiz en Desarrollo Frontend
+('API RESTful excelente', 9.2, TRUE, TRUE, 2, 10, 1),           -- Pedro Ruiz en Desarrollo Backend
+('Mantenimiento de la máquina bien realizado', 7.6, TRUE, TRUE, 3, 10, 1), -- Pedro Ruiz en Mantenimiento de Máquinas
+('Robots programados eficientemente', 8.5, TRUE, TRUE, 4, 10, 1); -- Pedro Ruiz en Programación de Robots
+
+-- Continúa para los demás alumnos...
+
+
+select * from evaluaciones;
 
 
 
