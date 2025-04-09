@@ -194,7 +194,7 @@ drop procedure if exists proyectos$$
 create procedure proyectos()
 begin
   declare inicio int default 0;
-  while inicio <25 do
+  while inicio <5 do
     set inicio = inicio +1;
     insert into proyecto(cod, nombre) values (
       concat(lpad(inicio,6,'0'),'P'),
@@ -221,7 +221,7 @@ begin
     fetch cur_proyectos into c_id;
     if fin = 1 then leave bucle_proyectos; end if;
     set i = 1;
-    while i <= 10 do
+    while i <= 5 do
       insert into actividades_formativas (nombre, obligatoriedad, proyecto)
       values (
         concat('actividad ', i, ' del proyecto ', c_id),
@@ -243,7 +243,7 @@ drop procedure if exists concreciones$$
 create procedure concreciones()
 begin
   declare inicio int default 0;
-  while inicio<50 do 
+  while inicio<20 do 
     set inicio = inicio +1;
     insert into concreciones(descripcion_actividad,dificultad,actividad) values(
       concat('desscripcion',inicio),
@@ -255,3 +255,89 @@ end$$
 delimiter ;
 call concreciones;
 select * from concreciones;
+
+-- Convenio
+
+
+
+
+
+
+
+
+
+-- Evaluacion 
+delimiter $$
+
+drop procedure if exists rellenar_evaluaciones$$
+create procedure rellenar_evaluaciones()
+begin
+  declare fin_alumnos int default 0;
+  declare a_id int;
+
+  declare cur_alumnos cursor for select id_alumno from alumno;
+  declare continue handler for not found set fin_alumnos = 1;
+
+  open cur_alumnos;
+  bucle_alumnos: loop
+    fetch cur_alumnos into a_id;
+    if fin_alumnos = 1 then leave bucle_alumnos; end if;
+
+    -- Bloque independiente para actividades
+    begin
+      declare fin_actividades int default 0;
+      declare act_id int;
+      declare tut_id int;
+
+      declare cur_actividades cursor for select id_actividades from actividades_formativas;
+      declare continue handler for not found set fin_actividades = 1;
+
+      open cur_actividades;
+      bucle_actividades: loop
+        fetch cur_actividades into act_id;
+        if fin_actividades = 1 then leave bucle_actividades; end if;
+
+        -- Elegir tutor laboral aleatorio
+        select id_laboral
+        into tut_id
+        from tutor_laboral
+        order by rand()
+        limit 1;
+
+        -- Insertar evaluación
+        insert into evaluacion (
+          observaciones_tutor_laboral,
+          nota,
+          firma_tutor,
+          firma_alumno,
+          actividad,
+          alumno,
+          tutor_laboral
+        ) values (
+          concat('Observaciones para alumno ', a_id, ' en actividad ', act_id),
+          round(rand() * 10, 2),
+          true,
+          true,
+          act_id,
+          a_id,
+          tut_id
+        );
+
+      end loop bucle_actividades;
+      close cur_actividades;
+    end;
+
+  end loop bucle_alumnos;
+  close cur_alumnos;
+end$$
+
+delimiter ;
+
+-- Ejecutar
+call rellenar_evaluaciones;
+
+-- Ver resultado
+select * from evaluacion;
+
+
+

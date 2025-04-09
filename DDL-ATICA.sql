@@ -100,19 +100,6 @@ create table concreciones (
     constraint fk_concrecion_actividad foreign key (actividad) references actividades_formativas(id_actividades)
 );
 
-create table evaluacion (
-    id_evaluacion int primary key auto_increment,
-    observaciones_tutor_laboral text,
-    nota double,
-    firma_tutor boolean,
-    firma_alumno boolean,
-    actividad int not null,
-    alumno int not null,
-    tutor_laboral int not null,
-    constraint fk_evaluacion_actividad foreign key (actividad) references actividades_formativas(id_actividades),
-    constraint fk_evaluacion_alumno foreign key (alumno) references alumno(id_alumno),
-    constraint fk_evaluacion_tutor_laboral foreign key (tutor_laboral) references tutor_laboral(id_laboral)
-);
 
 create table convenio (
     id_convenio int primary key auto_increment,
@@ -134,4 +121,18 @@ create table practicas (
     constraint fk_practicas_convenio foreign key (convenio) references convenio(id_convenio),
     constraint fk_practicas_alumno foreign key (alumno) references alumno(id_alumno),
     constraint fk_practicas_calendario foreign key (calendario) references calendario(id_calendario)
+);
+
+create table evaluacion (
+    id_evaluacion int primary key auto_increment,
+    observaciones_tutor_laboral text,
+    nota double,
+    firma_tutor boolean,
+    firma_alumno boolean,
+    actividad int not null,
+    alumno int not null,
+    tutor_laboral int not null,
+    constraint fk_evaluacion_actividad foreign key (actividad) references actividades_formativas(id_actividades),
+    constraint fk_evaluacion_alumno foreign key (alumno) references alumno(id_alumno),
+    constraint fk_evaluacion_tutor_laboral foreign key (tutor_laboral) references tutor_laboral(id_laboral)
 );
