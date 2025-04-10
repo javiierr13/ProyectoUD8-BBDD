@@ -103,6 +103,7 @@ create table concreciones (
 
 create table convenio (
     id_convenio int primary key auto_increment,
+    nombre varchar(100),
     firma boolean,
     tutor_laboral int not null,
     tutor_docente int not null,

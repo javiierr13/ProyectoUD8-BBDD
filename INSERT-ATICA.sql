@@ -250,27 +250,27 @@ call concreciones;
 select * from concreciones;
 
 -- Convenio
-insert into convenio (firma, tutor_laboral, tutor_docente, proyecto) values
-(true, 1, 1, 1),
-(true, 2, 2, 2),
-(true, 3, 3, 3),
-(true, 4, 4, 4),
-(true, 5, 5, 5),
-(true, 6, 6, 1),
-(true, 7, 7, 2),
-(true, 8, 8, 3),
-(true, 9, 9, 4),
-(true, 10, 10, 5),
-(true, 11, 11, 1),
-(true, 12, 12, 2),
-(true, 13, 13, 3),
-(true, 14, 14, 4),
-(true, 15, 15, 5),
-(true, 1, 16, 1),
-(true, 2, 17, 2),
-(true, 3, 18, 3),
-(true, 4, 19, 4),
-(true, 5, 20, 5);
+insert into convenio (nombre,firma, tutor_laboral, tutor_docente, proyecto) values
+('conevnio1',true, 1, 1, 1),
+('conevnio2',true, 2, 2, 2),
+('conevnio3',true, 3, 3, 3),
+('conevnio4',true, 4, 4, 4),
+('conevnio5',true, 5, 5, 5),
+('conevnio6',true, 6, 6, 1),
+('conevnio7',true, 7, 7, 2),
+('conevnio8',true, 8, 8, 3),
+('conevnio9',true, 9, 9, 4),
+('conevnio10',true, 10, 10, 5),
+('conevnio11',true, 11, 11, 1),
+('conevnio12',true, 12, 12, 2),
+('conevnio13',true, 13, 13, 3),
+('conevnio14',true, 14, 14, 4),
+('conevnio15',true, 15, 15, 5),
+('conevnio16',true, 1, 16, 1),
+('conevnio17',true, 2, 17, 2),
+('conevnio18',true, 3, 18, 3),
+('conevnio19',true, 4, 19, 4),
+('conevnio20',true, 5, 20, 5);
 
 select * from convenio;
 
@@ -293,8 +293,10 @@ end$$
 delimiter ;
 call practicas;
 select * from practicas;
-
-
+insert into practicas (anio_curso,convenio,alumno,calendario) values(
+	'2025', 1, 2, floor(RAND() * 15) + 1);
+insert into practicas (anio_curso,convenio,alumno,calendario) values(
+	'2025', 1, 3, floor(RAND() * 15) + 1);
 -- Evaluacion  
 -- Evaluaciones de los 20 alumnos en las 4 actividades
 -- Alumno 1
