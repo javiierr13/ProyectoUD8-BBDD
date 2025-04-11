@@ -25,7 +25,6 @@ group by empresa.nombre;
 -- Muestra la información completa de los convenios: Nombre del convenio, nombre 
 -- del alumno, nombre de los tutores laborales y docentes, fecha de inicio y fin y si está 
 -- o no firmado.
-
 select convenio.nombre, alumno.nombre, tutor_docente.nombre, tutor_laboral.nombre, calendario.fecha_inicio, calendario.fecha_fin, if(convenio.firma=1,'si','no') as esta_firmado 
 from convenio 
 	join  tutor_laboral on tutor_laboral.id_laboral=convenio.tutor_laboral
@@ -50,7 +49,6 @@ where p.anio_curso = '2025'
   and s.localizacion like '%sevilla%'
 group by actividad_formativa;
 
-
 -- Cuenta el número de concreciones por cada actividad formativa que existe en el sistema
 select af.nombre as actividad_formativa, count(c.id_concreciones) as num_concreciones
 from actividades_formativas af
@@ -62,7 +60,6 @@ select a.id_alumno, a.nombre, a.apellidos
 from alumno a
 	left  join practicas p on a.id_alumno = p.alumno
 where p.id_practicas is null;
--- revisar
 
 -- Muestra para los convenios firmados el número de alumnos que tienen asociados.
 select c.id_convenio, c.nombre, count(p.alumno) as num_alumnos
