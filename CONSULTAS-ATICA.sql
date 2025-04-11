@@ -26,6 +26,17 @@ group by empresa.nombre;
 -- del alumno, nombre de los tutores laborales y docentes, fecha de inicio y fin y si está 
 -- o no firmado.
 
+select convenio.nombre, alumno.nombre, tutor_docente.nombre, tutor_laboral.nombre, calendario.fecha_inicio, calendario.fecha_fin, if(convenio.firma=1,'si','no') as esta_firmado 
+from convenio 
+	join  tutor_laboral on tutor_laboral.id_laboral=convenio.tutor_laboral
+    join tutor_docente on tutor_docente.id_docente=convenio.tutor_docente
+    join practicas on practicas.convenio=convenio.id_convenio
+    join alumno on alumno.id_alumno=practicas.alumno
+    join calendario on calendario.id_calendario=practicas.calendario;
+
+-- Muestra para cada alumno su nombre y sus observaciones de seguimiento
+select alumno.nombre, evaluacion.observaciones_tutor_laboral from alumno 
+	join evaluacion on alumno.id_alumno=evaluacion.alumno;
 
 -- Muestra la nota media de cada actividad formativa de los alumnos del curso 24/25 que han realizado sus prácticas en Sedes de Sevilla.
 select af.nombre as actividad_formativa, avg(e.nota) as nota_media
