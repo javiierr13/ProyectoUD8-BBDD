@@ -46,10 +46,10 @@ from evaluacion e
     join practicas p on p.alumno = a.id_alumno
     join calendario c on p.calendario = c.id_calendario
     join sede s on s.id_sede = c.sede
-where p.anio_curso = '24/25'
+where p.anio_curso = '2025'
   and s.localizacion like '%sevilla%'
-group by af.nombre;
--- revisar
+group by actividad_formativa;
+
 
 -- Cuenta el número de concreciones por cada actividad formativa que existe en el sistema
 select af.nombre as actividad_formativa, count(c.id_concreciones) as num_concreciones
@@ -60,7 +60,7 @@ group by af.nombre;
 -- Muestra el listado de alumnos que no tienen convenio de colaboración.
 select a.id_alumno, a.nombre, a.apellidos
 from alumno a
-	left join practicas p on a.id_alumno = p.alumno
+	left  join practicas p on a.id_alumno = p.alumno
 where p.id_practicas is null;
 -- revisar
 
