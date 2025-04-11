@@ -38,7 +38,7 @@ from evaluacion e
 where p.anio_curso = '24/25'
   and s.localizacion like '%sevilla%'
 group by af.nombre;
-
+-- revisar
 
 -- Cuenta el número de concreciones por cada actividad formativa que existe en el sistema
 select af.nombre as actividad_formativa, count(c.id_concreciones) as num_concreciones
@@ -51,6 +51,7 @@ select a.id_alumno, a.nombre, a.apellidos
 from alumno a
 	left join practicas p on a.id_alumno = p.alumno
 where p.id_practicas is null;
+-- revisar
 
 -- Muestra para los convenios firmados el número de alumnos que tienen asociados.
 select c.id_convenio, c.nombre, count(p.alumno) as num_alumnos
